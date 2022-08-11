@@ -19,15 +19,16 @@ public class CentralRussianBankService extends WebServiceTemplate {
     private String cbrApiUrl;
 
     public List<ValuteCursOnDate> getCurrenciesFromCbr() throws DatatypeConfigurationException {
-        final GetCursOnDateXML getCursOnDateXml = new GetCursOnDateXML();
+        final GetCursOnDateXML getCursOnDateXML = new GetCursOnDateXML();
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(new Date());
 
         XMLGregorianCalendar xmlGregCal = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-        getCursOnDateXml.setOnDate(xmlGregCal);
+        getCursOnDateXML.setOnDate(xmlGregCal);
 
+        System.out.println(getCursOnDateXML);
         GetCursOnDateXmlResponse response = (GetCursOnDateXmlResponse)
-                marshalSendAndReceive(cbrApiUrl, getCursOnDateXml);
+                marshalSendAndReceive(cbrApiUrl, getCursOnDateXML);
 
         if (response == null) {
             throw new IllegalStateException("Не удалось получить данные от ЦБ РФ");
@@ -36,5 +37,10 @@ public class CentralRussianBankService extends WebServiceTemplate {
         final List<ValuteCursOnDate> courses = response.getGetCursOnDateXmlResult().getValuteData();
         courses.forEach(course -> course.setName(course.getName().trim()));
         return courses;
+    }
+
+    public ValuteCursOnDate getCourseForCurrency(String code) throws DatatypeConfigurationException {
+        return getCurrenciesFromCbr().stream()
+                .filter(currency -> code.equals(currency.getChCode())).findFirst().get();
     }
 }

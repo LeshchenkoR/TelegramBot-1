@@ -26,21 +26,21 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class BotService extends TelegramLongPollingBot {
 
-    private final CentralRussianBankService centralRussianBankService;
-    private final ActiveChatRepository activeChatRepository;
-    private final FinanceService financeService;
-
-    private Map<Long, List<String>> previousCommands = new ConcurrentHashMap<>();
-
     private static final String CURRENT_RATES = "/currentrates";
     private static final String ADD_INCOME = "/addincome";
     private static final String ADD_SPEND = "/addspend";
+
+    private final CentralRussianBankService centralRussianBankService;
+    private final FinanceService financeService;
+    private final ActiveChatRepository activeChatRepository;
 
     @Value("${bot.api.key}")
     private String apiKey;
 
     @Value("${bot.name}")
     private String name;
+
+    private Map<Long, List<String>> previousCommands = new ConcurrentHashMap<>();
 
     @Override
     public void onUpdateReceived(Update update) {

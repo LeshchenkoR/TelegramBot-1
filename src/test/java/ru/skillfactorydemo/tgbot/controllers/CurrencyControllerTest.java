@@ -23,5 +23,4 @@ class CurrencyControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
-
 }
